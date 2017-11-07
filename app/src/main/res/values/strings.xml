@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">MVPRx</string>
-    <string name="title_main">MVPRx</string>
+    <string name="title_main">主页</string>
     <string name="btn_click">Click Me!</string>
 </resources>

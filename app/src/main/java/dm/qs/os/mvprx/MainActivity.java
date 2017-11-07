@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.google.gson.Gson;
+import com.qmuiteam.qmui.widget.QMUIEmptyView;
 import com.qs.base.mvp.BaseActivity;
 
 import java.util.List;
@@ -26,6 +27,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
     @BindView(R.id.main_tv)
     TextView mainTv;
+    @BindView(R.id.main_empty_view)
+    QMUIEmptyView mainEmptyView;
 
     @NonNull
     @Override
@@ -39,22 +42,16 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
-
         ARouter.getInstance().inject(this);
 
-        getSupportActionBar().setTitle(R.string.title_main);
-
-    }
-
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.main_btn:
-                mainTv.setText("wait..");
-                mPresenter.getData("content");
-                break;
-            default:
-                break;
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.title_main);
         }
+
+        mainEmptyView.setVisibility(View.VISIBLE);
+        mainEmptyView.show(true, "loading", "请等待", null, null);
+
+        mPresenter.getData("content");
     }
 
     @Override
@@ -64,6 +61,9 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
     @Override
     public void getDataSuccess(List<Gank> result) {
+
+        mainEmptyView.setVisibility(View.GONE);
+
         mainTv.setText(new Gson().toJson(result));
     }
 }

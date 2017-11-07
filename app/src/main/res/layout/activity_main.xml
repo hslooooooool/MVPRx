@@ -4,13 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/main_btn"
+    <com.qmuiteam.qmui.widget.QMUIEmptyView
+        android:id="@+id/main_empty_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_48"
-        android:layout_margin="@dimen/dp_10"
-        android:onClick="onClick"
-        android:text="@string/btn_click" />
+        android:layout_height="match_parent" />
 
     <ScrollView
         android:layout_width="match_parent"
