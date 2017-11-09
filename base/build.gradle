@@ -1,27 +1,21 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.neenbedankt.android-apt'
-apply plugin: 'com.jakewharton.butterknife'
 
 android {
+    compileSdkVersion rootProject.ext.android["compileSdkVersion"]
+    buildToolsVersion rootProject.ext.android["buildToolsVersion"]
+    useLibrary 'org.apache.http.legacy'
 
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
-
-    defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = [moduleName: project.getName()]
-            }
-        }
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
     }
 
+    defaultConfig {
+        minSdkVersion rootProject.ext.android["minSdkVersion"]
+        targetSdkVersion rootProject.ext.android["targetSdkVersion"]
+        versionCode rootProject.ext.android["versionCode"]
+        versionName rootProject.ext.android["versionName"]
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -30,71 +24,99 @@ android {
     }
 }
 
-apt {
-    arguments {
-        arg(" moduleName", project.getName())
+
+buildscript {
+    repositories {
+        jcenter()
     }
 }
 
+
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+    // support
+    api rootProject.ext.dependencies["annotations"]
+    api(rootProject.ext.dependencies["support-v4"]) {
+        exclude module: 'support-annotations'
+    }
+    api(rootProject.ext.dependencies["appcompat-v7"]) {
+        exclude module: 'support-annotations'
+        exclude module: 'support-v4'
+    }
+    api(rootProject.ext.dependencies["design"]) {
+        exclude module: 'support-annotations'
+        exclude module: 'appcompat-v7'
+        exclude module: 'support-v4'
+    }
 
-    testCompile 'junit:junit:4.12'
+    // view
+    api(rootProject.ext.dependencies["autolayout"]) {
+        exclude group: 'com.android.support'
+    }
+    api(rootProject.ext.dependencies["butterknife"]) {
+        exclude module: 'support-annotations'
+    }
 
-    /******************************************基础库依赖******************************************/
-    compile rootProject.ext.dependencies_config.annotations
-    compile rootProject.ext.dependencies_config.supportv7
-    compile rootProject.ext.dependencies_config.design
+    // rx
+    api rootProject.ext.dependencies["rxjava"]
+    api(rootProject.ext.dependencies["rxandroid"]) {
+        exclude module: 'rxjava'
+    }
+    api(rootProject.ext.dependencies["rxcache"]) {
+        exclude module: 'rxjava'
+        exclude module: 'dagger'
+    }
+    implementation(rootProject.ext.dependencies["rxcache-jolyglot-gson"]) {
+        exclude module: 'gson'
+    }
+    api(rootProject.ext.dependencies["rxlifecycle"]) {
+        exclude module: 'rxjava'
+        exclude module: 'jsr305'
+    }
+    api(rootProject.ext.dependencies["rxlifecycle2-android"]) {
+        exclude module: 'support-annotations'
+        exclude module: 'rxjava'
+        exclude module: 'rxandroid'
+        exclude module: 'rxlifecycle'
+    }
+    api(rootProject.ext.dependencies["rxpermissions"]) {
+        exclude module: 'rxjava'
+        exclude module: 'support-annotations'
+    }
+    api rootProject.ext.dependencies['rxerrorhandler']
 
-    // Java注解（http://www.jetbrains.org/）
-    compile 'org.jetbrains:annotations-java5:15.0'
+    // network
+    api(rootProject.ext.dependencies["retrofit"]) {
+        exclude module: 'okhttp'
+        exclude module: 'okio'
+    }
+    implementation(rootProject.ext.dependencies["retrofit-converter-gson"]) {
+        exclude module: 'gson'
+        exclude module: 'okhttp'
+        exclude module: 'okio'
+        exclude module: 'retrofit'
+    }
+    implementation(rootProject.ext.dependencies["retrofit-adapter-rxjava"]) {
+        exclude module: 'rxjava'
+        exclude module: 'okhttp'
+        exclude module: 'retrofit'
+        exclude module: 'okio'
+    }
+    api rootProject.ext.dependencies["okhttp3"]
+    api(rootProject.ext.dependencies["glide"]) {
+        exclude module: 'support-v4'
+    }
+    annotationProcessor(rootProject.ext.dependencies["glide-compiler"]) {
+        exclude module: 'jsr305'
+    }
 
-    /******************************************组织库依赖******************************************/
+    // tools
+    compileOnly rootProject.ext.dependencies["javax.annotation"]
+    api rootProject.ext.dependencies["dagger2"]
+    annotationProcessor rootProject.ext.dependencies["dagger2-compiler"]
+    api rootProject.ext.dependencies["androideventbus"]
+    api rootProject.ext.dependencies["gson"]
 
-    // ButterKnife（http://jakewharton.github.io/butterknife/）
-    compile 'com.jakewharton:butterknife:8.8.1'
-    apt 'com.jakewharton:butterknife-compiler:8.8.1'
-
-    // 阿里页面路由ARouter（https://github.com/alibaba/ARouter）
-    compile 'com.alibaba:arouter-api:1.2.1.1'
-    apt 'com.alibaba:arouter-compiler:1.1.2.1'
-
-    // Retrofit2（http://square.github.io/retrofit/）
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
-
-    // Rx系列（https://github.com/ReactiveX）
-    compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.1.6'
-
-    // Json解析（https://github.com/google/gson）
-    compile 'com.google.code.gson:gson:2.7'
-
-    // OkHttp3（http://square.github.io/okhttp/）
-    compile 'com.squareup.okhttp3:okhttp:3.4.2'
-    compile 'com.squareup.okio:okio:1.7.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.4.2'
-
-    // EventBus事件订阅（http://greenrobot.org/eventbus）有意使用RxBus替换
-    compile 'org.greenrobot:eventbus:3.0.0'
-
-    // Glide图片解析（https://github.com/bumptech/glide）
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-
-    // 鲁班图片压缩（https://github.com/Curzibn/Luban）
-    compile 'top.zibin:Luban:1.1.3'
-
-    // QMUI样式(http://qmuiteam.com/android/page/start.html)
-    compile 'com.qmuiteam:qmui:1.0.4'
-    /******************************************个人库依赖******************************************/
-
-    // Material样式的搜索控件（https://github.com/Mauker1/MaterialSearchView）
-    compile 'br.com.mauker.materialsearchview:materialsearchview:1.2.0'
-
-    // 拼音字典（https://github.com/stuxuhai/jpinyin）
-    compile 'com.github.promeg:tinypinyin:1.0.0'
+    // test
+    api rootProject.ext.dependencies["timber"]
+    testApi rootProject.ext.dependencies["junit"]
 }

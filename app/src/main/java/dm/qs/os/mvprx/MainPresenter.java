@@ -2,10 +2,12 @@ package dm.qs.os.mvprx;
 
 import android.support.annotation.NonNull;
 
-import com.u7plus.service.http.RxSubscriber;
-import com.u7plus.service.http.entity.ApiException;
+import com.qs.base.http.RxSubscriber;
+import com.qs.base.http.entity.ApiException;
 
 import java.util.List;
+
+import dm.qs.os.mvprx.entity.Gank;
 
 /**
  * @author 华清松
@@ -26,30 +28,29 @@ public class MainPresenter extends MainContract.Presenter {
     }
 
     @Override
-    public void getData(String key) {
+    public void getData(String page) {
         addSubscribe(
-                mModel.getData(key)
-                        .subscribe(new RxSubscriber<List<Gank>>() {
+                mModel.getData(page).subscribe(new RxSubscriber<List<Gank>>() {
 
-                            @Override
-                            public void onStart() {
-                            }
+                    @Override
+                    public void onStart() {
+                    }
 
-                            @Override
-                            protected void onError(@NonNull ApiException ex) {
-                                mView.showToast(ex.getDisplayMessage());
-                                onCompleted();
-                            }
+                    @Override
+                    protected void onError(@NonNull ApiException ex) {
+                        mView.showToast(ex.getDisplayMessage());
+                        onCompleted();
+                    }
 
-                            @Override
-                            public void onCompleted() {
-                            }
+                    @Override
+                    public void onCompleted() {
+                    }
 
-                            @Override
-                            public void onNext(List<Gank>  result) {
-                                mView.getDataSuccess(result);
-                            }
-                        })
+                    @Override
+                    public void onNext(List<Gank> result) {
+                        mView.getDataSuccess(result);
+                    }
+                })
         );
     }
 }

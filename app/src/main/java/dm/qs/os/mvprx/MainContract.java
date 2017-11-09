@@ -6,6 +6,7 @@ import com.qs.base.mvp.BaseView;
 
 import java.util.List;
 
+import dm.qs.os.mvprx.entity.Gank;
 import rx.Observable;
 
 /**
@@ -29,10 +30,10 @@ public interface MainContract {
         /**
          * 获取数据
          *
-         * @param key 传参
+         * @param page 页码
          * @return Observable 被观察者
          */
-        Observable getData(String key);
+        Observable getData(String page);
     }
 
     abstract class Presenter extends BasePresenter<View, Model> {
@@ -40,6 +41,6 @@ public interface MainContract {
          * 获取数据
          * *@param key 数据类型关键字
          */
-        abstract void getData(String key);
+        abstract void getData(String page);
     }
 }

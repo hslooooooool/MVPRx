@@ -1,6 +1,5 @@
 package dm.qs.os.mvprx;
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.qs.base.app.BaseApplication;
 
 /**
@@ -14,9 +13,5 @@ public class MyApplication extends BaseApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        ARouter.openLog();
-        ARouter.openDebug();
-        ARouter.init(this);
     }
 }

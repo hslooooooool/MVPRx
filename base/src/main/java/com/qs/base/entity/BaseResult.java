@@ -13,21 +13,22 @@ public class BaseResult<T> {
     private T results;
 
     public BaseResult() {
+
     }
 
-    public boolean isError() {
+    public final boolean isError() {
         return error;
     }
 
-    public void setError(boolean error) {
+    public final void setError(boolean error) {
         this.error = error;
     }
 
-    public T getResults() {
+    public final T getResults() {
         return results;
     }
 
-    public void setResults(T results) {
+    public final void setResults(T results) {
         this.results = results;
     }
 }

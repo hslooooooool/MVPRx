@@ -9,15 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <ScrollView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/main_rv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/main_tv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textColor="@color/burlywood"
-            android:textSize="@dimen/sp_14" />
-    </ScrollView>
+        android:layout_height="match_parent" />
 </LinearLayout>

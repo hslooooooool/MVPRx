@@ -6,14 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.qs.base.entity.MessageEvent;
 import com.qs.base.utils.LogUtil;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import rx.Subscription;
 
 /**
  * @author 华清松
@@ -25,7 +19,6 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
 
     protected P mPresenter;
     protected int cusId;
-    protected Subscription subscription;
     protected boolean isActive;
 
     @Override
@@ -42,8 +35,6 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
         if (onCreatePresenter() != null) {
             mPresenter = onCreatePresenter();
         }
-
-        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -70,22 +61,6 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
         LogUtil.i("销毁:" + getLocalClassName());
         if (mPresenter != null) {
             mPresenter.unSubscribe();
-        }
-        if (subscription != null) {
-            subscription.unsubscribe();
-        }
-
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.POSTING)
-    public void messageEvent(MessageEvent messageEvent) {
-        switch (messageEvent.getCode()) {
-            case MessageEvent.EXIT:
-                finishThis();
-                break;
-            default:
-                break;
         }
     }
 

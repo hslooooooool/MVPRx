@@ -1,7 +1,7 @@
 package dm.qs.os.mvprx;
 
-import com.u7plus.service.http.ApiEngine;
-import com.u7plus.service.http.ObservableService;
+import com.qs.base.http.ApiEngine;
+import com.qs.base.http.ObservableService;
 
 import rx.Observable;
 
@@ -13,10 +13,10 @@ import rx.Observable;
  */
 class MainModel implements MainContract.Model {
 
-    private ApiService service = ApiEngine.getInstance("http://gank.io/api/history/").create(ApiService.class);
+    private ApiService service = ApiEngine.getInstance("https://gank.io/api/data/Android/").create(ApiService.class);
 
     @Override
-    public Observable getData(String key) {
-        return ObservableService.setObservable(service.getData(key));
+    public Observable getData(String page) {
+        return ObservableService.setObservable(service.getData(page));
     }
 }
